@@ -1,0 +1,32 @@
+name: CI
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  repro:
+    name: Issue Repro
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # v4
+
+      - name: Validate Gradle wrapper
+        uses: gradle/actions/wrapper-validation@db19848a5fa7950289d3668fb053140cf3028d43 # v3
+
+      - name: Setup Java
+        uses: actions/setup-java@b36c23c0d998641eff861008f374ee103c25ac73 # v4
+        with:
+          distribution: "temurin"
+          java-version: "17"
+
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@db19848a5fa7950289d3668fb053140cf3028d43 # v3
+
+      - name: Issue Repro
+        run: ./gradlew :sample-ide:importBuild --scan
